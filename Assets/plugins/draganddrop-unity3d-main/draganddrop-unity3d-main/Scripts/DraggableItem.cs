@@ -30,6 +30,20 @@ namespace plugins.draganddrop_unity3d_main.draganddrop_unity3d_main.Scripts
         public void OnDrag(PointerEventData eventData)
         {
             transform.position = Input.mousePosition;
+            if (!IsPointerOverUIObject())
+            {
+                Debug.Log("Dropped outside UI!");
+                HandleDroppedOutsideUI();
+                eventData.pointerDrag = null;
+                Destroy(gameObject);
+            }
+
+            return;
+
+            bool IsPointerOverUIObject()
+            {
+                return EventSystem.current.IsPointerOverGameObject();
+            }
         }
  
         public void OnEndDrag(PointerEventData eventData)
@@ -38,6 +52,18 @@ namespace plugins.draganddrop_unity3d_main.draganddrop_unity3d_main.Scripts
  
             _group.alpha = 1f;
             _image.raycastTarget = true;
+            print("enddrag");
+        }
+        
+        
+
+        private void HandleDroppedOutsideUI()
+        {
+            //spawn the correct machine part at correct position and dragging it
+            
+            // Add logic here to handle when item is dropped outside UI
+            // Example: Reset position, delete item, etc.
+            transform.position = parentAfterDrag.position; // Reset position
         }
     }
 }
