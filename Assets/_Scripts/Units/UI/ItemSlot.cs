@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace plugins.draganddrop_unity3d_main.draganddrop_unity3d_main.Scripts
+namespace _Scripts.Units.UI
 {
     public class ItemSlot : MonoBehaviour, IDropHandler
     {

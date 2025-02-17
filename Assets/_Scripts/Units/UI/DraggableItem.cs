@@ -1,19 +1,24 @@
+using _Scripts.Scriptables;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace plugins.draganddrop_unity3d_main.draganddrop_unity3d_main.Scripts
-{
+
     public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         private Image _image;
         private CanvasGroup _group;
+        private RectTransform _transform;
         public Transform parentAfterDrag;
- 
-        private void Start()
+        [SerializeField] private MachinePart machinePart;
+        private Camera _cam;
+
+        private void Awake()
         {
             _image = GetComponent<Image>();
             _group = GetComponent<CanvasGroup>();
+            _transform = transform as RectTransform;
+            _cam = Camera.main;
         }
  
         public void OnBeginDrag(PointerEventData eventData)
@@ -59,11 +64,12 @@ namespace plugins.draganddrop_unity3d_main.draganddrop_unity3d_main.Scripts
 
         private void HandleDroppedOutsideUI()
         {
-            //spawn the correct machine part at correct position and dragging it
             
-            // Add logic here to handle when item is dropped outside UI
-            // Example: Reset position, delete item, etc.
-            transform.position = parentAfterDrag.position; // Reset position
+            Vector3 worldPosition = _cam.ScreenToWorldPoint(transform.position);
+            worldPosition.z = 0;
+            machinePart.Spawn(worldPosition);
+            Destroy(gameObject);
+            transform.position = parentAfterDrag.position; 
         }
     }
-}
+
