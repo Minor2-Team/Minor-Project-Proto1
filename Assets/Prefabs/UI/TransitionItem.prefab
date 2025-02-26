@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentAfterDrag: {fileID: 0}
-  machinePart: {fileID: 11400000, guid: b6ef18c396a8919458e66e5f17d319b0, type: 2}
+  machinePart: {fileID: 11400000, guid: d2523942a42fb654691b636f65888832, type: 2}
 --- !u!225 &5979564351156922414
 CanvasGroup:
   m_ObjectHideFlags: 0

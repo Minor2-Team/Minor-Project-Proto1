@@ -37,10 +37,9 @@ using UnityEngine.UI;
             transform.position = Input.mousePosition;
             if (!IsPointerOverUIObject())
             {
-                Debug.Log("Dropped outside UI!");
-                HandleDroppedOutsideUI();
                 eventData.pointerDrag = null;
-                Destroy(gameObject);
+                HandleDroppedOutsideUI();
+                
             }
 
             return;
@@ -69,7 +68,6 @@ using UnityEngine.UI;
             worldPosition.z = 0;
             machinePart.Spawn(worldPosition);
             Destroy(gameObject);
-            transform.position = parentAfterDrag.position; 
         }
     }
 
