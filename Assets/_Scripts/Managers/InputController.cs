@@ -32,7 +32,7 @@ public class InputController : MonoBehaviour
     private void Zoom(InputAction.CallbackContext context)
     {
         float scrollInput = context.ReadValue<float>();
-        print(scrollInput);
+        
         cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - scrollInput * zoomSpeed, minZoom, maxZoom);
     }
 }
