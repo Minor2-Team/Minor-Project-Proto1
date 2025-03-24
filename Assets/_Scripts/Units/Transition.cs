@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Transition : MonoBehaviour
 {
-    [SerializeField] private string stringCondition;
-    [SerializeField] private State from;
-    [SerializeField] private State to;
+    [SerializeField] private char stringCondition;
+    [SerializeField] public State from;
+    [SerializeField] public State to;
     [SerializeField] private GameObject transitionLineObject;
     [SerializeField] private GameObject transitionArrowObject;
     [SerializeField] private Canvas canvas;
@@ -19,7 +19,7 @@ public class Transition : MonoBehaviour
         canvas.renderMode = RenderMode.WorldSpace;
         canvas.worldCamera=Camera.main;
         textLabel = canvas.GetComponentInChildren<TextMeshProUGUI>();
-        textLabel.text=stringCondition;
+        textLabel.text=""+stringCondition;
     }
 
     void Start()
@@ -49,6 +49,11 @@ public class Transition : MonoBehaviour
     {
         if(from && to)
             UpdateTransition();
+        else
+        {
+            lineRenderer.SetPosition(0,lineRenderer.transform.position);
+            lineRenderer.SetPosition(1,transitionArrowObject.transform.position);
+        }
     }
 
     void UpdateTransition()

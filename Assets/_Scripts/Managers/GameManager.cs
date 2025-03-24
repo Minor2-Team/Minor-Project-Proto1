@@ -22,17 +22,6 @@ public class GameManager : StaticInstance<GameManager> {
             case GameState.Starting:
                 HandleStarting();
                 break;
-            case GameState.SpawningHeroes:
-                HandleSpawningHeroes();
-                break;
-            case GameState.SpawningEnemies:
-                HandleSpawningEnemies();
-                break;
-            case GameState.HeroTurn:
-                HandleHeroTurn();
-                break;
-            case GameState.EnemyTurn:
-                break;
             case GameState.Win:
                 break;
             case GameState.Lose:
@@ -43,7 +32,6 @@ public class GameManager : StaticInstance<GameManager> {
 
         OnAfterStateChanged?.Invoke(newState);
         
-        Debug.Log($"New state: {newState}");
     }
 
     private void HandleStarting() {
@@ -51,27 +39,8 @@ public class GameManager : StaticInstance<GameManager> {
 
         // Eventually call ChangeState again with your next state
         
-        ChangeState(GameState.SpawningHeroes);
     }
-
-    private void HandleSpawningHeroes() {
-        
-        ChangeState(GameState.SpawningEnemies);
-    }
-
-    private void HandleSpawningEnemies() {
-        
-        // Spawn enemies
-        
-        ChangeState(GameState.HeroTurn);
-    }
-
-    private void HandleHeroTurn() {
-        // If you're making a turn based game, this could show the turn menu, highlight available units etc
-        
-        // Keep track of how many units need to make a move, once they've all finished, change the state. This could
-        // be monitored in the unit manager or the units themselves.
-    }
+    
 }
 
 /// <summary>
@@ -81,10 +50,7 @@ public class GameManager : StaticInstance<GameManager> {
 [Serializable]
 public enum GameState {
     Starting = 0,
-    SpawningHeroes = 1,
-    SpawningEnemies = 2,
-    HeroTurn = 3,
-    EnemyTurn = 4,
+
     Win = 5,
     Lose = 6,
 }
