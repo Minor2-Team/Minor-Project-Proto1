@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 
 public class InputController : MonoBehaviour
 {
-    public float zoomSpeed = 2f;  // Speed of zooming
-    public float minZoom = 5f;    // Minimum zoom level
-    public float maxZoom = 20f;   // Maximum zoom level
+    public float zoomSpeed = 2f; 
+    public float minZoom = 5f;    
+    public float maxZoom = 20f;  
 
     private Camera cam;
     private InputSystem_Actions controls;
