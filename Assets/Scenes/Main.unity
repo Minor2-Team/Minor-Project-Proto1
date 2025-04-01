@@ -9347,8 +9347,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputString: abba
-  parsedString: abba
-  counter: 3
+  parsedString: bbaa
+  counter: 0
   inputStringText: {fileID: 1114444185}
   smoothnessTiming: 1
 --- !u!1 &1246104066

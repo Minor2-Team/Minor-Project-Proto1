@@ -16,7 +16,6 @@ public class InputString : MonoBehaviour
     private State _state;
     private void Awake()
     {
-        counter = inputString.Length - 1;
         parsedString=inputString;
         inputStringText.text = inputString;
     }
@@ -30,7 +29,7 @@ public class InputString : MonoBehaviour
     [ContextMenu("StartParsing")]
     public void CallParsing()
     {
-        counter = inputString.Length - 1;
+        counter = 0;
         parsedString=inputString;
         inputStringText.text = inputString;
         StartCoroutine(StartParsing());
@@ -46,7 +45,7 @@ public class InputString : MonoBehaviour
 
         while (true)
         {
-            if (counter < 0)
+            if (parsedString.Length==0)
             {
                 if (_currState is FinalState)
                 {
@@ -63,6 +62,7 @@ public class InputString : MonoBehaviour
             }
             if (!_currState.transitions.TryGetValue(PeekStringChar(), out var nextTransition))
             {
+                print(PeekStringChar());
                 print("Dead State Reached");
                 yield break;
             }
@@ -85,12 +85,12 @@ public class InputString : MonoBehaviour
     }
     public char PeekStringChar()
     {
-        return inputString[counter];
+        return parsedString[counter];
     }
 
     public char ParseStringChar()
     {
         parsedString = parsedString.Remove(counter, 1);
-        return inputString[counter--];
+        return inputString[counter];
     }
 }
