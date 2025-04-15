@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Transition : MonoBehaviour
 {
-    [SerializeField] private char stringCondition;
+    /*[SerializeField] private char stringCondition;
     [SerializeField] public State from;
     [SerializeField] public State to;
     [SerializeField] private GameObject transitionLineObject;
@@ -138,5 +138,5 @@ public class Transition : MonoBehaviour
     void UpdateLabelPosition()
     {
         
-    }
+    }*/
 }

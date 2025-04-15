@@ -8,7 +8,7 @@ namespace _Scripts.Units
     public class State : MonoBehaviour
     {
         [SerializeField] public string stateName;
-        [SerializeField]public Dictionary<char,Transition> transitions=new ();
+        [SerializeField]public Dictionary<char,TransitionNew> transitions=new ();
         [SerializeField] public float radius=1.5f;
         
         [SerializeField] private Canvas canvas;
