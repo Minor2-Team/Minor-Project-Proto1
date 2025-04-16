@@ -9,6 +9,7 @@ namespace _Scripts.Units
     {
         [SerializeField] public string stateName;
         [SerializeField]public Dictionary<char,TransitionNew> transitions=new ();
+        [SerializeField] public Dictionary<char,TransitionNew> transitionsto=new ();
         [SerializeField] public float radius=1.5f;
         
         [SerializeField] private Canvas canvas;
@@ -20,6 +21,18 @@ namespace _Scripts.Units
             canvas.worldCamera=Camera.main;
             stateLable = canvas.GetComponentInChildren<TextMeshProUGUI>();
             stateLable.text=stateName;
+        }
+
+        private void OnMouseDrag()
+        {
+            foreach (var transition in transitions)
+            {
+                transition.Value.UpdateTransition();
+            }
+            foreach (var transition in transitionsto)
+            {
+                transition.Value.UpdateTransition();
+            }
         }
     }
 }

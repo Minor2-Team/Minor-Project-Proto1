@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Units;
+using TMPro;
 using UnityEngine;
 
 public class TransitionNew : MonoBehaviour
@@ -11,79 +12,86 @@ public class TransitionNew : MonoBehaviour
     [SerializeField] private Transform arrow;
     [SerializeField] public Transform fromPos;
     [SerializeField] public Transform toPos;
+    [SerializeField] private TextMeshProUGUI textLabel;
     [SerializeField] public bool isSelected;
+
+
 
     private void Start()
     {
         
-        fromPos.GetComponent<TransitionChange>().InitCollision(ChangeFrom);
-        toPos.GetComponent<TransitionChange>().InitCollision(ChangeTo);
-        fromPos.GetComponent<TransitionChange>().InitMouse(ChangeMouse);
-        toPos.GetComponent<TransitionChange>().InitMouse(ChangeMouse);
+        
+        fromPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeFrom;
+        fromPos.GetComponent<TransitionChange>().OnMouseClick += ChangeMouse;
+        toPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeTo;
+        toPos.GetComponent<TransitionChange>().OnMouseClick += ChangeMouse;
         UpdateVisuals();
     }
 
     
 
-    void UpdateTransition()
+    public void UpdateTransition()
     {
+        float radius = 1.5f;
+        
+        if(from)
+            fromPos.position= from.transform.position;
+        if(to)
+            toPos.position= to.transform.position;
+
         if (from)
         {
-            fromPos.position= from.transform.position;
-            float radius = 1.5f;
-            if(from)radius=from.radius;
-            
-            if (to)
+            fromPos.position += ((toPos.position - fromPos.position).normalized * radius);
+            if (!from.transitions.ContainsKey(stringCondition))
             {
-                fromPos.position += ((to.transform.position - fromPos.position).normalized * radius);
-            }
-            else
-            {
-                fromPos.position += ((toPos.position - fromPos.position).normalized * radius);
-            }
-
-            if (from.transitions.ContainsKey(stringCondition))
-            {
-                
-            }
-            else
-            {
-                
                 from.transitions.Add(stringCondition,this);
             }
         }
-        
 
         if (to)
         {
-            toPos.position = to.transform.position;
-            float radius = 1.5f;
-            if(to)radius=to.radius;
-            
-            if (from)
+            toPos.position += (fromPos.position - toPos.position).normalized * radius;
+            if (!to.transitionsto.ContainsKey(stringCondition))
             {
-                toPos.position += (from.transform.position - toPos.position).normalized * radius;
-            }
-            else
-            {
-                toPos.position += (fromPos.position - toPos.position).normalized * radius;
+                to.transitionsto.Add(stringCondition,this);
             }
         }
+        UpdateVisuals();
     }
 
     void UpdateVisuals()
     {
+        if (from && !to && toPos.GetComponent<DraggableObject>().isDragging)
+        {
+            fromPos.position= from.transform.position;
+            fromPos.position += ((toPos.position - fromPos.position).normalized * 1.5f);
+        }
+        if (to && !from && fromPos.GetComponent<DraggableObject>().isDragging)
+        {
+            toPos.position= to.transform.position;
+            toPos.position += (fromPos.position - toPos.position).normalized * 1.5f;
+        }
+        
         lineRenderer.SetPosition(0,fromPos.position);
         arrow.position = toPos.position;
         arrow.right = (toPos.position - fromPos.position).normalized;
         lineRenderer.SetPosition(1,arrow.position);
+        Vector3 arrowPos =toPos.position - (Vector3)(arrow.right * 1.5f);
+        Vector3 midPoint = (fromPos.position + arrowPos) / 2;
+        textLabel.transform.position = midPoint + Vector3.up * 0.5f; 
+
+        var dir = arrowPos - fromPos.position;
+        if (dir.x < 0)
+        {
+            dir = fromPos.position - arrowPos;
+        }
+        textLabel.transform.right = (dir).normalized;
     }
     private void Update()
     {
         if (isSelected)
         {
             UpdateVisuals();
-
         }
         
     }
@@ -99,6 +107,7 @@ public class TransitionNew : MonoBehaviour
         {
             from.transitions.Remove(stringCondition);
             from = null;
+            
             isSelected = true;
         }
 
@@ -110,6 +119,7 @@ public class TransitionNew : MonoBehaviour
         if (isEnter)
         {
             to = state;
+            
             isSelected = false;
         }
         else
