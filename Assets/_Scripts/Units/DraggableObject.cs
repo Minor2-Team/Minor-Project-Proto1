@@ -6,10 +6,11 @@ using UnityEngine.Serialization;
 public class DraggableObject : MonoBehaviour
 {
     private Camera _cam;
-    private Coroutine _dragCoroutine;
 
     public bool isDragging;
     private Vector3 _offset;
+
+    public Action<bool> OnDragChange;
 
     private void Awake()
     {
@@ -19,20 +20,20 @@ public class DraggableObject : MonoBehaviour
     public void StartDrag()
     {
         isDragging = true;
+        OnDragChange?.Invoke(isDragging);
         _offset = transform.position - GetMouseWorldPosition();
         
     }
 
     private void OnMouseDown()
     {
-        StartDrag();
-        print("mouseDown");
+        StartDrag();;
     }
 
     private void OnMouseUp()
     {
         isDragging = false;
-        
+        OnDragChange?.Invoke(isDragging);
     }
 
     private void Update()

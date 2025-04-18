@@ -12,20 +12,47 @@ public class TransitionNew : MonoBehaviour
     [SerializeField] private Transform arrow;
     [SerializeField] public Transform fromPos;
     [SerializeField] public Transform toPos;
-    [SerializeField] private TextMeshProUGUI textLabel;
+    [SerializeField] private Transform textLabel;
     [SerializeField] public bool isSelected;
 
 
 
     private void Start()
     {
-        
-        
-        fromPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeFrom;
-        fromPos.GetComponent<TransitionChange>().OnMouseClick += ChangeMouse;
-        toPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeTo;
-        toPos.GetComponent<TransitionChange>().OnMouseClick += ChangeMouse;
+        fromPos.GetComponent<DraggableObject>().OnDragChange += FromTrackStateChange;
+        toPos.GetComponent<DraggableObject>().OnDragChange += ToTrackStateChange;
+        UpdateTransition();
         UpdateVisuals();
+    }
+
+    private void FromTrackStateChange(bool flag)
+    {
+        if (flag)
+        {
+            fromPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeFrom;
+        }
+        else
+        {
+            fromPos.GetComponent<TransitionChange>().OnAnyCollision -= ChangeFrom;
+        }
+        ChangeMouse(flag);
+        UpdateTransition();
+        UpdateVisuals();
+    }
+
+    private void ToTrackStateChange(bool flag)
+    {
+        if (flag)
+        {
+            toPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeTo;
+        }
+        else
+        {
+            toPos.GetComponent<TransitionChange>().OnAnyCollision -= ChangeTo;
+        }
+        ChangeMouse(flag);
+        UpdateTransition();
+            UpdateVisuals();
     }
 
     
@@ -77,15 +104,15 @@ public class TransitionNew : MonoBehaviour
         arrow.right = (toPos.position - fromPos.position).normalized;
         lineRenderer.SetPosition(1,arrow.position);
         Vector3 arrowPos =toPos.position - (Vector3)(arrow.right * 1.5f);
-        Vector3 midPoint = (fromPos.position + arrowPos) / 2;
-        textLabel.transform.position = midPoint + Vector3.up * 0.5f; 
+        Vector3 midPoint = (fromPos.position + toPos.position) / 2;
+        textLabel.position = midPoint + Vector3.up * 0.5f; 
 
         var dir = arrowPos - fromPos.position;
         if (dir.x < 0)
         {
             dir = fromPos.position - arrowPos;
         }
-        textLabel.transform.right = (dir).normalized;
+        textLabel.right = (dir).normalized;
     }
     private void Update()
     {
