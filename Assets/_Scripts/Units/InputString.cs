@@ -67,8 +67,8 @@ public class InputString : MonoBehaviour
                 yield break;
             }
 
-            print("Transition from " + _currState.stateName + " to " + nextTransition.to.stateName + " on " + PeekStringChar());
-            _currState = nextTransition.to;
+            print("Transition from " + _currState.stateName + " to " + nextTransition.toState.stateName + " on " + PeekStringChar());
+            _currState = nextTransition.toState;
             
             ParseStringChar();
             inputStringText.transform.DOMove(_currState.transform.position, smoothnessTiming)

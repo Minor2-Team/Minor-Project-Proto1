@@ -1086,11 +1086,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8568342648351777497, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 0.74
       objectReference: {fileID: 0}
     - target: {fileID: 8568342648351777497, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 3.13
       objectReference: {fileID: 0}
     - target: {fileID: 8568342648351777497, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2156,9 +2156,17 @@ PrefabInstance:
     - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: to
       value: 
-      objectReference: {fileID: 1379220827}
+      objectReference: {fileID: 0}
     - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: from
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
+      propertyPath: toState
+      value: 
+      objectReference: {fileID: 1379220827}
+    - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
+      propertyPath: fromState
       value: 
       objectReference: {fileID: 281155270}
     - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
@@ -20125,6 +20133,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2097791380}
     - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
+      propertyPath: toState
+      value: 
+      objectReference: {fileID: 1661031667}
+    - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
+      propertyPath: fromState
+      value: 
+      objectReference: {fileID: 2097791380}
+    - target: {fileID: 2593001654866632520, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: stringCondition
       value: 98
       objectReference: {fileID: 0}
@@ -20134,11 +20150,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8568342648351777497, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6
+      value: 5.93
       objectReference: {fileID: 0}
     - target: {fileID: 8568342648351777497, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.93
       objectReference: {fileID: 0}
     - target: {fileID: 8568342648351777497, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -20815,14 +20831,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0ff389eede9fa4db8fe8860adf9e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stringCondition: 98
-  from: {fileID: 0}
-  to: {fileID: 0}
+  transitionSymbol: 0
+  fromState: {fileID: 0}
+  toState: {fileID: 0}
   lineRenderer: {fileID: 5525045722698269516}
-  arrow: {fileID: 3917123791441300794}
-  fromPos: {fileID: 7122784098440452241}
-  toPos: {fileID: 3183227685192529942}
-  textLabel: {fileID: 2384675949784118632}
+  arrowTransform: {fileID: 3917123791441300794}
+  fromTransform: {fileID: 7122784098440452241}
+  toTransform: {fileID: 3183227685192529942}
+  labelTransform: {fileID: 2384675949784118632}
   isSelected: 0
 --- !u!1 &5757600750815200366
 GameObject:

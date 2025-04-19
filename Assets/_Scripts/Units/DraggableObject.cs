@@ -11,6 +11,7 @@ public class DraggableObject : MonoBehaviour
     private Vector3 _offset;
 
     public Action<bool> OnDragChange;
+    public Action OnMouseDragged;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class DraggableObject : MonoBehaviour
         OnDragChange?.Invoke(isDragging);
     }
 
+    /*
     private void Update()
     {
         if (isDragging)
@@ -46,6 +48,12 @@ public class DraggableObject : MonoBehaviour
                 isDragging = false;
             }
         }
+    }*/
+
+    private void OnMouseDrag()
+    {
+        transform.position = GetMouseWorldPosition() + _offset;
+        OnMouseDragged?.Invoke();
     }
 
     private Vector3 GetMouseWorldPosition()

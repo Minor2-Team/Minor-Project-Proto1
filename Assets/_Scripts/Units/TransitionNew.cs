@@ -1,175 +1,173 @@
 using System;
-using _Scripts.Units;
-using TMPro;
 using UnityEngine;
+using _Scripts.Units;
 
 public class TransitionNew : MonoBehaviour
 {
-    [SerializeField] private char stringCondition;
-    [SerializeField]public State from;
-    [SerializeField]public State to;
-    [SerializeField]private LineRenderer lineRenderer;
-    [SerializeField] private Transform arrow;
-    [SerializeField] public Transform fromPos;
-    [SerializeField] public Transform toPos;
-    [SerializeField] private Transform textLabel;
+    [SerializeField] private char transitionSymbol;
+    [SerializeField] public State fromState;
+    [SerializeField] public State toState;
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private Transform arrowTransform;
+    [SerializeField] public Transform fromTransform;
+    [SerializeField] public Transform toTransform;
+    [SerializeField] private Transform labelTransform;
     [SerializeField] public bool isSelected;
 
-
+    private const float Radius = 1.5f;
 
     private void Start()
     {
-        fromPos.GetComponent<DraggableObject>().OnDragChange += FromTrackStateChange;
-        toPos.GetComponent<DraggableObject>().OnDragChange += ToTrackStateChange;
+        InitialSetup();
+        
+        SubscribeDragEvents(fromTransform, OnFromDragChanged);
+        SubscribeDragEvents(toTransform, OnToDragChanged);
+        UpdateTransition();
+        UpdateVisuals();
         UpdateTransition();
         UpdateVisuals();
     }
-
-    private void FromTrackStateChange(bool flag)
-    {
-        if (flag)
-        {
-            fromPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeFrom;
-        }
-        else
-        {
-            fromPos.GetComponent<TransitionChange>().OnAnyCollision -= ChangeFrom;
-        }
-        ChangeMouse(flag);
-        UpdateTransition();
-        UpdateVisuals();
-    }
-
-    private void ToTrackStateChange(bool flag)
-    {
-        if (flag)
-        {
-            toPos.GetComponent<TransitionChange>().OnAnyCollision += ChangeTo;
-        }
-        else
-        {
-            toPos.GetComponent<TransitionChange>().OnAnyCollision -= ChangeTo;
-        }
-        ChangeMouse(flag);
-        UpdateTransition();
-            UpdateVisuals();
-    }
-
     
+
+    private void InitialSetup()
+    {
+        if (!fromState)
+        {
+            fromTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
+        }
+        if(!toState)
+        {
+            toTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
+        }
+    }
+
+    private void SubscribeDragEvents(Transform target, Action<bool> dragCallback)
+    {
+        target.GetComponent<DraggableObject>().OnDragChange += dragCallback;
+    }
+
+    private void OnFromDragChanged(bool isDragging)
+    {
+        var transitionChange = fromTransform.GetComponent<TransitionChange>();
+
+        if (isDragging)
+            transitionChange.OnAnyCollision += HandleFromStateChange;
+        else
+            transitionChange.OnAnyCollision -= HandleFromStateChange;
+
+        UpdateTransition();
+        UpdateVisuals();
+        UpdateTransition();
+        UpdateVisuals();
+    }
+
+    private void OnToDragChanged(bool isDragging)
+    {
+        var transitionChange = toTransform.GetComponent<TransitionChange>();
+
+        if (isDragging)
+            transitionChange.OnAnyCollision += HandleToStateChange;
+        else
+            transitionChange.OnAnyCollision -= HandleToStateChange;
+
+        UpdateTransition();
+        UpdateVisuals();
+        UpdateTransition();
+        UpdateVisuals();
+    }
 
     public void UpdateTransition()
     {
-        float radius = 1.5f;
-        
-        if(from)
-            fromPos.position= from.transform.position;
-        if(to)
-            toPos.position= to.transform.position;
-
-        if (from)
+        if (fromState)
         {
-            fromPos.position += ((toPos.position - fromPos.position).normalized * radius);
-            if (!from.transitions.ContainsKey(stringCondition))
-            {
-                from.transitions.Add(stringCondition,this);
-            }
+            fromTransform.position = fromState.transform.position;
+            fromTransform.position += (toTransform.position - fromTransform.position).normalized * Radius;
+
+            if (!fromState.transitions.ContainsKey(transitionSymbol))
+                fromState.transitions.Add(transitionSymbol, this);
         }
 
-        if (to)
+        if (toState)
         {
-            toPos.position += (fromPos.position - toPos.position).normalized * radius;
-            if (!to.transitionsto.ContainsKey(stringCondition))
-            {
-                to.transitionsto.Add(stringCondition,this);
-            }
+            toTransform.position = toState.transform.position;
+            toTransform.position += (fromTransform.position - toTransform.position).normalized * Radius;
+
+            if (!toState.transitionsto.ContainsKey(transitionSymbol))
+                toState.transitionsto.Add(transitionSymbol, this);
         }
+
         UpdateVisuals();
     }
 
-    void UpdateVisuals()
+    private void UpdateVisuals()
     {
-        if (from && !to && toPos.GetComponent<DraggableObject>().isDragging)
+        if (fromState == null && toState != null && fromTransform.GetComponent<DraggableObject>().isDragging)
         {
-            fromPos.position= from.transform.position;
-            fromPos.position += ((toPos.position - fromPos.position).normalized * 1.5f);
+            toTransform.position = toState.transform.position;
+            toTransform.position += (fromTransform.position - toTransform.position).normalized * Radius;
         }
-        if (to && !from && fromPos.GetComponent<DraggableObject>().isDragging)
-        {
-            toPos.position= to.transform.position;
-            toPos.position += (fromPos.position - toPos.position).normalized * 1.5f;
-        }
-        
-        lineRenderer.SetPosition(0,fromPos.position);
-        arrow.position = toPos.position;
-        arrow.right = (toPos.position - fromPos.position).normalized;
-        lineRenderer.SetPosition(1,arrow.position);
-        Vector3 arrowPos =toPos.position - (Vector3)(arrow.right * 1.5f);
-        Vector3 midPoint = (fromPos.position + toPos.position) / 2;
-        textLabel.position = midPoint + Vector3.up * 0.5f; 
 
-        var dir = arrowPos - fromPos.position;
-        if (dir.x < 0)
+        if (toState == null && fromState != null && toTransform.GetComponent<DraggableObject>().isDragging)
         {
-            dir = fromPos.position - arrowPos;
+            fromTransform.position = fromState.transform.position;
+            fromTransform.position += (toTransform.position - fromTransform.position).normalized * Radius;
         }
-        textLabel.right = (dir).normalized;
-    }
-    private void Update()
-    {
-        if (isSelected)
-        {
-            UpdateVisuals();
-        }
-        
+
+        Vector3 start = fromTransform.position;
+        Vector3 end = toTransform.position;
+        Vector3 direction = (end - start).normalized;
+
+        lineRenderer.SetPosition(0, start);
+        arrowTransform.position = end;
+        arrowTransform.right = direction;
+        lineRenderer.SetPosition(1, arrowTransform.position);
+
+        Vector3 midPoint = (start + end) * 0.5f;
+        labelTransform.position = midPoint + Vector3.up * 0.5f;
+
+        Vector3 labelDir = arrowTransform.position - direction * Radius - start;
+        if (labelDir.x < 0)
+            labelDir = -labelDir;
+
+        labelTransform.right = labelDir.normalized;
     }
 
-    void ChangeFrom(State state,bool isEnter)
+    private void HandleFromStateChange(State state, bool isEntering)
     {
-        if (isEnter)
+        if (isEntering)
         {
-            from = state;
-            isSelected = false;
+            fromState = state;
+            fromTransform.GetComponent<DraggableObject>().OnMouseDragged -= UpdateVisuals;
         }
         else
         {
-            from.transitions.Remove(stringCondition);
-            from = null;
-            
-            isSelected = true;
+            fromState.transitions.Remove(transitionSymbol);
+            fromState = null;
+            fromTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
         }
 
         UpdateTransition();
         UpdateVisuals();
+        UpdateTransition();
+        UpdateVisuals();
     }
-    void ChangeTo(State state,bool isEnter)
+
+    private void HandleToStateChange(State state, bool isEntering)
     {
-        if (isEnter)
+        if (isEntering)
         {
-            to = state;
-            
-            isSelected = false;
+            toState = state;
+            toTransform.GetComponent<DraggableObject>().OnMouseDragged -= UpdateVisuals;
         }
         else
         {
-            to = null;
-            isSelected = true;
+            toState = null;
+            toTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
         }
 
         UpdateTransition();
         UpdateVisuals();
-    }
-    void ChangeMouse(bool isEnter)
-    {
-        if (isEnter)
-        {
-            isSelected = true;
-        }
-        else
-        {
-            isSelected = false;
-        }
-
-        fromPos.position = lineRenderer.GetPosition(0);
-        toPos.position = arrow.position;
+        UpdateTransition();
+        UpdateVisuals();
     }
 }
