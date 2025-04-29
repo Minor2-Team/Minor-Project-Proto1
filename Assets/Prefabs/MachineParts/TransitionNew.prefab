@@ -1308,7 +1308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0ff389eede9fa4db8fe8860adf9e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transitionSymbols: 
+  transitionSymbols: 0000
   transitionSymbol: 0
   fromState: {fileID: 0}
   toState: {fileID: 0}

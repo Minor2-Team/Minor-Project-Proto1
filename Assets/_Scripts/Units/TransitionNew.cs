@@ -6,7 +6,6 @@ using _Scripts.Units;
 public class TransitionNew : MonoBehaviour
 {
     [SerializeField] private List<char> transitionSymbols = new();
-    [SerializeField] private char transitionSymbol;
     [SerializeField] public State fromState;
     [SerializeField] public State toState;
     [SerializeField] private LineRenderer lineRenderer;
@@ -90,8 +89,17 @@ public class TransitionNew : MonoBehaviour
             fromTransform.position = fromState.transform.position;
             fromTransform.position += (toTransform.position - fromTransform.position).normalized * Radius;
 
-            if (!fromState.transitions.ContainsKey(transitionSymbol))
-                fromState.transitions.Add(transitionSymbol, this);
+            /*if (!fromState.transitions.ContainsKey(transitionSymbol))
+                fromState.transitions.Add(transitionSymbol, this);*/
+
+            foreach (var transitionSymbol in transitionSymbols)
+            {
+                if (!fromState.transitions.ContainsKey(transitionSymbol))
+                {
+                    
+                    fromState.transitions.Add(transitionSymbol, this);
+                }
+            }
         }
 
         if (toState)
@@ -99,8 +107,16 @@ public class TransitionNew : MonoBehaviour
             toTransform.position = toState.transform.position;
             toTransform.position += (fromTransform.position - toTransform.position).normalized * Radius;
 
-            if (!toState.transitionsto.ContainsKey(transitionSymbol))
+            /*if (!toState.transitionsto.ContainsKey(transitionSymbol))
+                toState.transitionsto.Add(transitionSymbol, this);*/
+            foreach (var transitionSymbol in transitionSymbols)
+            {
+                if (!toState.transitionsto.ContainsKey(transitionSymbol))
+                {
+                    
                 toState.transitionsto.Add(transitionSymbol, this);
+                }
+            }
         }
 
         UpdateVisuals();
@@ -176,7 +192,11 @@ public class TransitionNew : MonoBehaviour
         }
         else
         {
-            fromState.transitions.Remove(transitionSymbol);
+            /*fromState.transitions.Remove(transitionSymbol);*/
+            foreach (var transitionSymbol in transitionSymbols)
+            {
+                fromState.transitions.Remove(transitionSymbol);
+            }
             fromState = null;
             fromTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
         }
@@ -196,7 +216,11 @@ public class TransitionNew : MonoBehaviour
         }
         else
         {
-            toState.transitionsto.Remove(transitionSymbol);
+            /*toState.transitionsto.Remove(transitionSymbol);*/
+            foreach (var transitionSymbol in transitionSymbols)
+            {
+                toState.transitionsto.Remove(transitionSymbol);
+            }
             toState = null;
             toTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
         }
@@ -244,11 +268,19 @@ public class TransitionNew : MonoBehaviour
         
         if (fromState)
         {
-            fromState.transitions.Remove(transitionSymbol);
+            /*fromState.transitions.Remove(transitionSymbol);*/
+            foreach (var transitionSymbol in transitionSymbols)
+            {
+                fromState.transitions.Remove(transitionSymbol);
+            }
         }
         if (toState)
         {
-            toState.transitionsto.Remove(transitionSymbol);
+            /*toState.transitionsto.Remove(transitionSymbol);*/
+            foreach (var transitionSymbol in transitionSymbols)
+            {
+                toState.transitionsto.Remove(transitionSymbol);
+            }
         }
         if (singleCharacterInputField)
         {

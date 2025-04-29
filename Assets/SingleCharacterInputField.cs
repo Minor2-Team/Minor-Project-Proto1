@@ -38,13 +38,17 @@ public class SingleCharacterInputField : MonoBehaviour,IPointerClickHandler
             _skipcall = false;
             return;
         }
-        if (string.IsNullOrEmpty(text)) return;
-        if (text.Length > chachedText.Length)//character added
+        
+        if (text.Length >= chachedText.Length)// added
         {
             char lastChar = text[^1];
             if (lastChar == ',')
             {
                 canEnterChar = true;
+            }
+            else if(char.IsWhiteSpace(lastChar))
+            {
+                
             }
             else
             {
@@ -60,7 +64,7 @@ public class SingleCharacterInputField : MonoBehaviour,IPointerClickHandler
                 }
             }
         }
-        else // character removed
+        else //  removed
         {
             char lastChar = chachedText[^1];
             if (lastChar == ',')
@@ -76,7 +80,7 @@ public class SingleCharacterInputField : MonoBehaviour,IPointerClickHandler
         }
         
 
-
+        print(canEnterChar);
         chachedText = inputField.text;
     }
 

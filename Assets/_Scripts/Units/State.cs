@@ -25,8 +25,10 @@ namespace _Scripts.Units
 
         private void OnMouseDrag()
         {
+            
             foreach (var transition in transitions)
             {
+                print(transition.Key);
                 transition.Value.UpdateTransition();
             }
             foreach (var transition in transitionsto)
