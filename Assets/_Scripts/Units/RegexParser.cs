@@ -9,7 +9,6 @@ public class RegexParser : MonoBehaviour
     [SerializeField]string regex1 = "ab*";  // Matches 'a' followed by zero or more 'b's
     [SerializeField]string regex2 = "(ab)+";  // Matches 'a' followed by at least one 'b' or nothing
     
-    [ContextMenu("MakeAutometa")]
     void MakeAutometa()
     {
         var solver = new CharSetSolver();
@@ -62,10 +61,5 @@ public class RegexParser : MonoBehaviour
 
    
 
-    private void Start()
-    {
-        MakeAutometa();
-        
-    }
     
 }

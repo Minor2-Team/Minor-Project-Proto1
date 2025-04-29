@@ -8,10 +8,11 @@ public class DraggableObject : MonoBehaviour
     private Camera _cam;
 
     public bool isDragging;
+    public bool withoutCollider;
     private Vector3 _offset;
-
     public Action<bool> OnDragChange;
     public Action OnMouseDragged;
+    public GameObject parent;
 
     private void Awake()
     {
@@ -23,12 +24,33 @@ public class DraggableObject : MonoBehaviour
         isDragging = true;
         OnDragChange?.Invoke(isDragging);
         _offset = transform.position - GetMouseWorldPosition();
+        if (withoutCollider)
+        {
+            StartCoroutine(DragRoutine());
+        }
         
+    }
+
+    IEnumerator DragRoutine()
+    {
+        while (isDragging)
+        {
+            transform.position=Vector2.MoveTowards(transform.position,GetMouseWorldPosition() + _offset,1f);
+            if (TryGetComponent(out TransitionNew tar))
+            {
+                tar.UpdateTransition();
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                isDragging = false;
+            }
+            yield return null;
+        }
     }
 
     private void OnMouseDown()
     {
-        StartDrag();;
+        StartDrag();
     }
 
     private void OnMouseUp()
@@ -61,5 +83,14 @@ public class DraggableObject : MonoBehaviour
         Vector3 mousePoint = _cam.ScreenToWorldPoint(Input.mousePosition);
         mousePoint.z = 0; // Keep object in 2D space
         return mousePoint;
+    }
+
+    private void OnDestroy()
+    {
+        if (parent)
+        {
+            
+        Destroy(parent);
+        }
     }
 }

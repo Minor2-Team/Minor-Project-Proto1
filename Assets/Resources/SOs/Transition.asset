@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2abce27c29c4b43975a0b6758ca96c6, type: 3}
   m_Name: Transition
   m_EditorClassIdentifier: 
-  prefab: {fileID: -5811917394583596693, guid: ab4ed476ca176f149ab73d700dc0ebd8, type: 3}
+  prefab: {fileID: 6334133937145973797, guid: ae7df6da6cc652b47ace47a3678caebc, type: 3}

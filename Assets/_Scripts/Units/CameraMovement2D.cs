@@ -1,35 +1,59 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraMovement2D : MonoBehaviour
 {
-    public float panSpeed = 20f;
-    public float panBorderThickness = 10f;
+    public float dragSpeed = 2f;
     public Vector2 panLimit;
+
+    private Vector3 lastMousePosition;
+    private bool isDragging = false;
+    private Camera _camera;
+
+    private void Awake()
+    {
+        _camera = GetComponent<Camera>();
+    }
 
     void Update()
     {
-        Vector3 pos = transform.position;
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (IsPointerOverUI() || IsPointerOverWorldObject()) return;
 
-        if (Input.GetKey("w") )
-        {
-            pos.y += panSpeed * Time.deltaTime;
-        }
-        if (Input.GetKey("s") )
-        {
-            pos.y -= panSpeed * Time.deltaTime;
-        }
-        if (Input.GetKey("d") )
-        {
-            pos.x += panSpeed * Time.deltaTime;
-        }
-        if (Input.GetKey("a") )
-        {
-            pos.x -= panSpeed * Time.deltaTime;
+            lastMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            isDragging = true;
         }
 
-        pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x);
-        pos.y = Mathf.Clamp(pos.y, -panLimit.y, panLimit.y);
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+        }
 
-        transform.position = pos;
+        if (isDragging)
+        {
+            Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 difference = lastMousePosition - currentMousePosition;
+            transform.position += difference * dragSpeed;
+            lastMousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+
+            transform.position = new Vector3(
+                Mathf.Clamp(transform.position.x, -panLimit.x, panLimit.x),
+                Mathf.Clamp(transform.position.y, -panLimit.y, panLimit.y),
+                transform.position.z
+            );
+        }
+    }
+
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current && EventSystem.current.IsPointerOverGameObject();
+    }
+
+    private bool IsPointerOverWorldObject()
+    {
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+        return hit.collider;
     }
 }

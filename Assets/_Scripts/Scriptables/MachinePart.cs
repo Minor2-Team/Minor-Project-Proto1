@@ -9,8 +9,10 @@ namespace _Scripts.Scriptables
 
         public void Spawn(Vector3 position)
         {
+            
             var obj=Instantiate(prefab, position, Quaternion.identity);
             obj.StartDrag();
+            
         }
     }
 }

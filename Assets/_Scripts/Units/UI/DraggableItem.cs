@@ -56,7 +56,6 @@ using UnityEngine.UI;
  
             _group.alpha = 1f;
             _image.raycastTarget = true;
-            print("enddrag");
         }
         
         

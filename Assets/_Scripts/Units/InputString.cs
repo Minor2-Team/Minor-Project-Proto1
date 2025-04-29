@@ -55,7 +55,6 @@ public class InputString : MonoBehaviour
                 }
                 else
                 {
-                    
                     print("String is not accepted");
                     yield break;
                 }
@@ -93,4 +92,11 @@ public class InputString : MonoBehaviour
         parsedString = parsedString.Remove(counter, 1);
         return inputString[counter];
     }
+    public void SetInputString(string str)
+    {
+        inputString = str;
+        parsedString = str;
+        inputStringText.text = str;
+    }
+
 }

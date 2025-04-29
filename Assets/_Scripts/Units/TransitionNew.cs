@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using _Scripts.Units;
 
 public class TransitionNew : MonoBehaviour
 {
+    [SerializeField] private List<char> transitionSymbols = new();
     [SerializeField] private char transitionSymbol;
     [SerializeField] public State fromState;
     [SerializeField] public State toState;
@@ -12,14 +14,19 @@ public class TransitionNew : MonoBehaviour
     [SerializeField] public Transform fromTransform;
     [SerializeField] public Transform toTransform;
     [SerializeField] private Transform labelTransform;
+    [SerializeField] private SingleCharacterInputField singleCharacterInputField;
     [SerializeField] public bool isSelected;
 
     private const float Radius = 1.5f;
 
     private void Start()
     {
-        InitialSetup();
+        if (singleCharacterInputField)
+        {
+            singleCharacterInputField.OnCharacterChanged += HandleCharacterChanged;
+        }
         
+        InitialSetup();
         SubscribeDragEvents(fromTransform, OnFromDragChanged);
         SubscribeDragEvents(toTransform, OnToDragChanged);
         UpdateTransition();
@@ -101,35 +108,63 @@ public class TransitionNew : MonoBehaviour
 
     private void UpdateVisuals()
     {
-        if (fromState == null && toState != null && fromTransform.GetComponent<DraggableObject>().isDragging)
+        if (!fromState && toState && fromTransform.GetComponent<DraggableObject>().isDragging)
         {
             toTransform.position = toState.transform.position;
             toTransform.position += (fromTransform.position - toTransform.position).normalized * Radius;
         }
 
-        if (toState == null && fromState != null && toTransform.GetComponent<DraggableObject>().isDragging)
+        if (!toState && fromState && toTransform.GetComponent<DraggableObject>().isDragging)
         {
             fromTransform.position = fromState.transform.position;
             fromTransform.position += (toTransform.position - fromTransform.position).normalized * Radius;
         }
 
-        Vector3 start = fromTransform.position;
-        Vector3 end = toTransform.position;
-        Vector3 direction = (end - start).normalized;
+        if (fromState && toState && fromState == toState)
+        {
+            int loopPoints = 20;
+            lineRenderer.positionCount = loopPoints + 1;
 
-        lineRenderer.SetPosition(0, start);
-        arrowTransform.position = end;
-        arrowTransform.right = direction;
-        lineRenderer.SetPosition(1, arrowTransform.position);
+            float loopRadius = 1f; 
+            Vector3 center = fromTransform.position + Vector3.up * loopRadius; 
 
-        Vector3 midPoint = (start + end) * 0.5f;
-        labelTransform.position = midPoint + Vector3.up * 0.5f;
+            for (int i = 0; i <= loopPoints; i++)
+            {
+                float angle = 2 * Mathf.PI * i / loopPoints;
+                float x = Mathf.Cos(angle) * loopRadius;
+                float y = Mathf.Sin(angle) * loopRadius;
+                lineRenderer.SetPosition(i, center + new Vector3(x, y, 0));
+            }
 
-        Vector3 labelDir = arrowTransform.position - direction * Radius - start;
-        if (labelDir.x < 0)
-            labelDir = -labelDir;
+            arrowTransform.position = lineRenderer.GetPosition(loopPoints / 2);
+            Vector3 dir = lineRenderer.GetPosition(loopPoints / 2 + 1) - lineRenderer.GetPosition(loopPoints / 2 - 1);
+            arrowTransform.right = dir.normalized;
 
-        labelTransform.right = labelDir.normalized;
+            labelTransform.position = center ;
+            labelTransform.right = Vector3.right;
+        }
+        else
+        {
+            lineRenderer.positionCount = 2;
+            Vector3 start = fromTransform.position;
+            Vector3 end = toTransform.position;
+            Vector3 direction = (end - start).normalized;
+
+            lineRenderer.SetPosition(0, start);
+            arrowTransform.position = end;
+            arrowTransform.right = direction;
+            lineRenderer.SetPosition(1, arrowTransform.position);
+
+            Vector3 midPoint = (start + end) * 0.5f;
+            labelTransform.position = midPoint ;
+
+            Vector3 labelDir = arrowTransform.position - direction * Radius - start;
+            if (labelDir.x < 0)
+                labelDir = -labelDir;
+
+            labelTransform.right = labelDir.normalized;
+            labelTransform.position += labelTransform.up * 0.5f;
+        }
     }
 
     private void HandleFromStateChange(State state, bool isEntering)
@@ -161,6 +196,7 @@ public class TransitionNew : MonoBehaviour
         }
         else
         {
+            toState.transitionsto.Remove(transitionSymbol);
             toState = null;
             toTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
         }
@@ -169,5 +205,54 @@ public class TransitionNew : MonoBehaviour
         UpdateVisuals();
         UpdateTransition();
         UpdateVisuals();
+    }
+    private void HandleCharacterChanged(bool added,char character)
+    {
+        if(added)
+        {
+            transitionSymbols.Add(character);
+            if(fromState)
+                fromState.transitions.Add(character, this);
+        }
+        else
+        {
+            transitionSymbols.Remove(character);
+            if(fromState)
+                fromState.transitions.Remove(character);
+        }
+        
+        
+        
+        /*if (transitionSymbol != character)
+        {
+            if (fromState)
+            {
+                fromState.transitions.Remove(transitionSymbol);
+                
+            }
+        }
+        transitionSymbol = character;
+        if (fromState && !fromState.transitions.ContainsKey(transitionSymbol))
+        {
+            fromState.transitions.Add(transitionSymbol, this);
+        }*/
+            
+    }
+
+    private void OnDestroy()
+    {
+        
+        if (fromState)
+        {
+            fromState.transitions.Remove(transitionSymbol);
+        }
+        if (toState)
+        {
+            toState.transitionsto.Remove(transitionSymbol);
+        }
+        if (singleCharacterInputField)
+        {
+            singleCharacterInputField.OnCharacterChanged -= HandleCharacterChanged;
+        }
     }
 }
