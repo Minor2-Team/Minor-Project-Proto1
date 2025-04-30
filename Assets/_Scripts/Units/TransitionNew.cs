@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using _Scripts.Units;
 
@@ -111,10 +112,11 @@ public class TransitionNew : MonoBehaviour
                 toState.transitionsto.Add(transitionSymbol, this);*/
             foreach (var transitionSymbol in transitionSymbols)
             {
-                if (!toState.transitionsto.ContainsKey(transitionSymbol))
+                if (!toState.transitionsto.Contains(this))
                 {
                     
-                toState.transitionsto.Add(transitionSymbol, this);
+                    /*toState.transitionsto.Add(transitionSymbol, this);*/
+                    toState.transitionsto.Add(this);
                 }
             }
         }
@@ -167,7 +169,7 @@ public class TransitionNew : MonoBehaviour
             Vector3 direction = (end - start).normalized;
 
             lineRenderer.SetPosition(0, start);
-            arrowTransform.position = end;
+            arrowTransform.position = new(end.x,end.y,arrowTransform.position.z);
             arrowTransform.right = direction;
             lineRenderer.SetPosition(1, arrowTransform.position);
 
@@ -219,7 +221,7 @@ public class TransitionNew : MonoBehaviour
             /*toState.transitionsto.Remove(transitionSymbol);*/
             foreach (var transitionSymbol in transitionSymbols)
             {
-                toState.transitionsto.Remove(transitionSymbol);
+                toState.transitionsto.Remove(this);
             }
             toState = null;
             toTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
@@ -279,7 +281,7 @@ public class TransitionNew : MonoBehaviour
             /*toState.transitionsto.Remove(transitionSymbol);*/
             foreach (var transitionSymbol in transitionSymbols)
             {
-                toState.transitionsto.Remove(transitionSymbol);
+                toState.transitionsto.Remove(this);
             }
         }
         if (singleCharacterInputField)

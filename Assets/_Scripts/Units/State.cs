@@ -9,7 +9,7 @@ namespace _Scripts.Units
     {
         [SerializeField] public string stateName;
         [SerializeField]public Dictionary<char,TransitionNew> transitions=new ();
-        [SerializeField] public Dictionary<char,TransitionNew> transitionsto=new ();
+        [SerializeField] public List< TransitionNew> transitionsto=new ();
         [SerializeField] public float radius=1.5f;
         
         [SerializeField] private Canvas canvas;
@@ -33,7 +33,7 @@ namespace _Scripts.Units
             }
             foreach (var transition in transitionsto)
             {
-                transition.Value.UpdateTransition();
+                transition.UpdateTransition();
             }
         }
     }

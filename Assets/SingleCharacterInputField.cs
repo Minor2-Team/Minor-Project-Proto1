@@ -44,6 +44,11 @@ public class SingleCharacterInputField : MonoBehaviour,IPointerClickHandler
             char lastChar = text[^1];
             if (lastChar == ',')
             {
+                if (canEnterChar)
+                {
+                    _skipcall = true;
+                    inputField.text = chachedText;
+                }
                 canEnterChar = true;
             }
             else if(char.IsWhiteSpace(lastChar))
