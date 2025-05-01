@@ -1,5 +1,6 @@
 using _Scripts.Systems;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
@@ -11,7 +12,7 @@ public class MenuManager : MonoBehaviour
     {
         playButton.onClick.AddListener(() =>
         {
-            SceneLoader.Instance.LoadScene(SceneIndex.Main);
+            SceneLoader.Instance.LoadSceneIndex(SceneManager.GetActiveScene().buildIndex+1);
         });
         
         quitButton.onClick.AddListener(Application.Quit);

@@ -9,28 +9,33 @@ using UnityEngine.Serialization;
 public class QueueManager : MonoBehaviour
 {
     [System.Serializable]
-    private struct QueueElement
+    public struct QueueElement
     {
         public string inputString;
-        public bool shouldAccept;
+        public bool shouldNotAccept;
     }
 
     [SerializeField] private float dequeSpeed;
-    [SerializeField]private List<QueueElement> queue = new();
+
+    [SerializeField] public List<QueueElement> queue = new();
     [SerializeField]Queue<InputText> inputTextList = new();
     [SerializeField]private InputText inputTextPrefab;
     [SerializeField] ElementsContainer queueContainer;
+    
+    Coroutine _parsingCoroutine;
     private void Start()
     {
+        GameManager.Instance.stringCount = queue.Count;
+        GameManager.Instance.acceptedCount = 0;
         foreach (var element in queue)
         {
             var inputText = Instantiate(inputTextPrefab, queueContainer.transform);
-            inputText.SetInputString(element.inputString, element.shouldAccept);
+            inputText.SetInputString(element.inputString, element.shouldNotAccept);
             inputTextList.Enqueue(inputText);
         }
     }
     
-    [ContextMenu("parse inputstring")]
+    [ContextMenu("parse input String")]
     public void ParseLastString()
     {
         if (!inputTextList.TryPeek(out var endElement)) return;
@@ -42,7 +47,7 @@ public class QueueManager : MonoBehaviour
     [ContextMenu("parse all strings")]
     public void ParseAllStrings()
     {
-        StartCoroutine( StartParsing());
+        _parsingCoroutine = StartCoroutine( StartParsing());
     }
     public IEnumerator StartParsing()
     {
@@ -54,5 +59,32 @@ public class QueueManager : MonoBehaviour
             yield return new WaitForSeconds(dequeSpeed);
         }
     }
-    
+
+    public void StopParsing()
+    {
+        if(_parsingCoroutine!=null)
+            StopCoroutine(_parsingCoroutine);
+        _parsingCoroutine = null;
+    }
+    public void Reload()
+    {
+        if(_parsingCoroutine!=null)
+            StopCoroutine(_parsingCoroutine);
+        _parsingCoroutine = null;
+        while (inputTextList.Count > 0)
+        {
+            var element = inputTextList.Dequeue();
+            if (element)
+            {
+                Destroy(element.gameObject);
+            }
+        }
+        foreach (var element in queue)
+        {
+            var inputText = Instantiate(inputTextPrefab, queueContainer.transform);
+            inputText.SetInputString(element.inputString, element.shouldNotAccept);
+            print(inputText);
+            inputTextList.Enqueue(inputText);
+        }
+    }
 }

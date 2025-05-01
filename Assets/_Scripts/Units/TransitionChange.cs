@@ -5,7 +5,7 @@ using UnityEngine;
 public class TransitionChange : MonoBehaviour
 {
     public event Action<State,bool> OnAnyCollision;
-    public event Action<bool> OnMouseClick;
+
     public event Action OnMouseMove;
     private State currState;
     private bool flag;
@@ -23,20 +23,5 @@ public class TransitionChange : MonoBehaviour
         {
             OnAnyCollision?.Invoke(state,false);
         }  
-    }
-    private void OnMouseDown()
-    {
-        OnMouseClick?.Invoke(true);
-    }
-
-    private void OnMouseDrag()
-    {
-        OnMouseMove?.Invoke();
-    }
-
-    private void OnMouseUp()
-    {
-        OnMouseClick?.Invoke(false);
-        
     }
 }

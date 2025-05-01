@@ -63,6 +63,7 @@ public class InputString : MonoBehaviour
             {
                 print(PeekStringChar());
                 print("Dead State Reached");
+                
                 yield break;
             }
 

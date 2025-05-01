@@ -202,7 +202,7 @@ public class TransitionNew : MonoBehaviour
             fromState = null;
             fromTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
         }
-
+        GameManager.Instance.TransitionConnected();
         UpdateTransition();
         UpdateVisuals();
         UpdateTransition();
@@ -226,6 +226,7 @@ public class TransitionNew : MonoBehaviour
             toState = null;
             toTransform.GetComponent<DraggableObject>().OnMouseDragged += UpdateVisuals;
         }
+        GameManager.Instance.TransitionConnected();
 
         UpdateTransition();
         UpdateVisuals();

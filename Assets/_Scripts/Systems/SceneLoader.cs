@@ -22,6 +22,13 @@ namespace _Scripts.Systems
 
             StartCoroutine(LoadSceneAsync(sceneName));
         }
+        public void LoadSceneIndex(int scene)
+        {
+            print(scene);
+            
+            string sceneName = System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(scene));
+            StartCoroutine(LoadSceneAsync(sceneName));
+        }
 
         private IEnumerator LoadSceneAsync(string sceneName)
         {
