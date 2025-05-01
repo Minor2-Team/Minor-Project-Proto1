@@ -78,10 +78,6 @@ public class InputString : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-    }
     public char PeekStringChar()
     {
         return parsedString[counter];

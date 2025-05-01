@@ -138,7 +138,7 @@ public class TransitionNew : MonoBehaviour
             fromTransform.position += (toTransform.position - fromTransform.position).normalized * Radius;
         }
 
-        if (fromState && toState && fromState == toState)
+        if (fromState && toState && fromState == toState)//self loop
         {
             int loopPoints = 20;
             lineRenderer.positionCount = loopPoints + 1;
@@ -176,7 +176,7 @@ public class TransitionNew : MonoBehaviour
             Vector3 midPoint = (start + end) * 0.5f;
             labelTransform.position = midPoint ;
 
-            Vector3 labelDir = arrowTransform.position - direction * Radius - start;
+            Vector3 labelDir = direction;
             if (labelDir.x < 0)
                 labelDir = -labelDir;
 
