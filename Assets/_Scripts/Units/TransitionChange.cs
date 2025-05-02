@@ -5,8 +5,6 @@ using UnityEngine;
 public class TransitionChange : MonoBehaviour
 {
     public event Action<State,bool> OnAnyCollision;
-
-    public event Action OnMouseMove;
     private State currState;
     private bool flag;
     private void OnTriggerEnter2D(Collider2D other)
