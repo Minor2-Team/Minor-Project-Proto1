@@ -74,6 +74,7 @@ public class GameManager : Singleton<GameManager> {
     }
     public void Reload()
     {
+        acceptedCount = 0;
         var queueManager = FindFirstObjectByType<QueueManager>();
         stringCount = queueManager.queue.Count;
         queueManager.Reload();

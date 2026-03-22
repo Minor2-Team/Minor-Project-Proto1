@@ -9977,7 +9977,7 @@ MonoBehaviour:
   queue:
   - inputString: bb
     shouldNotAccept: 0
-  - inputString: abcb
+  - inputString: abc
     shouldNotAccept: 0
   - inputString: bdb
     shouldNotAccept: 0
